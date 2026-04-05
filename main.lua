@@ -1,6 +1,10 @@
 --simple character moving
 
+local love = require("love")
+
 local velocity = 3
+local posx = 0
+local posy = 0
 
 function love.load()
 	player = {}
@@ -30,8 +34,11 @@ function love.update(dt)
 	if love.keyboard.isDown("a") then
 		player.x = player.x - velocity
 	end
+
+	posx = posx + 0.3
+	posy = posy + 0.3
 end
 function love.draw()
 	love.graphics.circle("fill", player.x, player.y, 100)
-	love.graphics.rectangle("fill", 0, 0, 50, 50)
+	love.graphics.rectangle("fill", posx, posy, 50, 50)
 end
