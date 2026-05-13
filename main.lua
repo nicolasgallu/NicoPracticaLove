@@ -1,44 +1,28 @@
---simple character moving
+--[[
+Nicolas Gallucci Lua (love) Bible.
 
-local love = require("love")
+What is Love?
+Is basically a framework to develop 2D games in Lua.
+Thas why is important to resume some basic Lua material.
+--]]
 
-local velocity = 3
-local posx = 0
-local posy = 0
-
-function love.load()
-	player = {}
-	player.x = 200
-	player.y = 200
-end
-
-function love.keypressed(key, scancode, isrepeat)
-	if key == "escape" then
-		love.event.quit()
+--Functions: Factorial Example
+function factorial(num)
+	if num < 0 or not num then
+		return "ingrese un numero mayor a 0"
+	end
+	if num == 0 then
+		return 1
+	else
+		return num * factorial(num - 1)
 	end
 end
 
-function love.update(dt)
-	if love.keyboard.isDown("w") then
-		player.y = player.y + velocity
-	end
+num = io.read("*n") --> con '*n' nos aseguramos de solo tomar numbers
+print(factorial(num))
 
-	if love.keyboard.isDown("s") then
-		player.y = player.y - velocity
-	end
+--Functions: Twice Example
 
-	if love.keyboard.isDown("d") then
-		player.x = player.x + velocity
-	end
-
-	if love.keyboard.isDown("a") then
-		player.x = player.x - velocity
-	end
-
-	posx = posx + 0.3
-	posy = posy + 0.3
-end
-function love.draw()
-	love.graphics.circle("fill", player.x, player.y, 100)
-	love.graphics.rectangle("fill", posx, posy, 50, 50)
+function twice(x)
+	return 2 * x
 end
