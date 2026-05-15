@@ -49,29 +49,92 @@ chessboard = {
 --diagonals: think on movement over the matriz +1-1..etc without getting out the chessboard.
 --restrictions over diagonals, u can not pass row1,4 and columns 1and 4.
 
-user_inp = { ["row"] = 1, ["col"] = 1 }
+queens_count = 4
+another_round = true
+function queens_game(user_inp)
+	if chessboard[user_inp["row"]][user_inp["col"]] == "x" then
+		print("your queen would be attacked, try another position")
+	else
+		queens_count = queens_count - 1
+		print("Queens pending to organize: " .. queens_count)
+		for row, columns in ipairs(chessboard) do
+			if row == user_inp["row"] then
+				chessboard[row][1] = "x"
+				chessboard[row][2] = "x"
+				chessboard[row][3] = "x"
+				chessboard[row][4] = "x"
+			end
+			columns[user_inp["col"]] = "x"
 
-for row, columns in ipairs(chessboard) do
-	if row == user_inp["row"] then
-		chessboard[row][1] = "x"
-		chessboard[row][2] = "x"
-		chessboard[row][3] = "x"
-		chessboard[row][4] = "x"
-	end
-	columns[user_inp["col"]] = "x"
-	if user_inp["row"] < 4 then
-		chessboard[math.min(user_inp["row"] + row, 4)][math.min(user_inp["col"] + row, 4)] = "x"
+			move_up = user_inp["row"] + row
+			move_right = user_inp["col"] + row
+			move_left = (user_inp["col"] - row)
+			move_down = (user_inp["row"] - row)
+
+			if move_up > 4 then
+			else
+				if move_right < 5 then
+					chessboard[move_up][move_right] = "x"
+				end
+
+				if move_left > 0 then
+					chessboard[move_up][move_left] = "x"
+				end
+			end
+
+			if move_down < 1 then
+			else
+				if move_right < 5 then
+					chessboard[move_down][move_right] = "x"
+				end
+				if move_left > 0 then
+					chessboard[move_down][move_left] = "x"
+				end
+			end
+		end
+
+		if queens_count == 0 then
+			print("BRO YOU F* WON!!!")
+		elseif queens_count > 0 then
+			another_round = false
+			for i = 1, 4 do
+				if
+					chessboard[i][1] ~= "x"
+					or chessboard[i][2] ~= "x"
+					or chessboard[i][3] ~= "x"
+					or chessboard[i][4] ~= "x"
+				then
+					another_round = true
+				end
+			end
+		end
+
+		if another_round == false then
+			print("bro you suck.. next!")
+		else
+			print("ok bro keep going")
+		end
+
+		print("--------------------------")
+		for i = 0, 3 do
+			print(
+				chessboard[4 - i][1]
+					.. " "
+					.. chessboard[4 - i][2]
+					.. " "
+					.. chessboard[4 - i][3]
+					.. " "
+					.. chessboard[4 - i][4]
+			)
+		end
 	end
 end
 
-for i = 0, 3 do
-	print(
-		chessboard[4 - i][1]
-			.. " "
-			.. chessboard[4 - i][2]
-			.. " "
-			.. chessboard[4 - i][3]
-			.. " "
-			.. chessboard[4 - i][4]
-	)
+while another_round do
+	print("enter a row")
+	row = io.read("*n")
+	print("enter a column")
+	col = io.read("*n")
+	user_inp = { ["row"] = row, ["col"] = col }
+	queens_game(user_inp)
 end
