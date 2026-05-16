@@ -4,6 +4,8 @@
 --For example LOAD is a callback that runs just once when the program starts, so is where u would usually set up
 --some init variables.
 
+--[[
+
 --LOAD: function that is called once on Love first Run.
 function love.load()
 	love.graphics.setNewFont(12)
@@ -81,4 +83,67 @@ end
 --because we get this notification we can do things like saving state of the player, etc..
 function love.quit()
 	print("Thanks for playing! Come back soon!")
+end
+
+-- There are more callbacks, but this ones are the most used and importants to build a simple game.
+
+--]]
+
+--LOVE.GRAPHICS.DRAW: Draws a Drawable object (text object, image, canva, video, mesh, ..)
+--on the screen with optional rotation, scaling and shearing.
+--Objects are drawn relative to their local coordinate system, by default the origin is on the
+--top left corner and every change in rotation, scaling, position, is relative to that origin.
+
+--synpos is: love.graphics.draw( drawable, x, y, r, sx, sy, ox, oy, kx, ky )
+-- Args:
+--[[
+1.Drawable drawable: A drawable object
+2.number x (0): The position to draw the object (x-axis).
+3.number y (0): The position to draw the object (y-axis).
+4.number r (0): Orientation (radians).
+5. number sx (1): Scale factor (x-axis).
+6.number sy (sx): Scale factor (y-axis).
+7.number ox (0): Origin offset (x-axis).
+8.number oy (0): Origin offset (y-axis).
+
+Available since LÖVE 0.8.0
+9.number kx (0): Shearing factor (x-axis).
+10.number ky (0): Shearing factor (y-axis).
+--]]
+
+function love.load()
+	text = "Enter a valid time: "
+	start = 0
+end
+
+function love.keypressed(key, scancode, isrepeat)
+	if key == "backspace" then
+		text = string.sub(text, 1, -2)
+	end
+end
+
+function love.textinput(t)
+	text = text .. t
+end
+
+function love.draw()
+	--x, y = love.mouse.getPosition()
+	love.graphics.rectangle("fill", 20, 50, 60, 120)
+
+	love.graphics.print(text, 200, 200)
+	--love.graphics.print(text, 100, 100)
+
+	if start >= 2 then
+		love.graphics.print("Termino el tiempo")
+	elseif start < 2 then
+		start = love.timer.getTime()
+	end
+
+	love.graphics.print(start, 50, 50)
+
+	--if math.floor(start) == 3 then end
+	--love.graphics.print({ { 1, 0, 0 }, "nicolas llegaste a los 30Seconds" }, 100, 100)
+	font = love.graphics.getFont()
+	a = love.graphics.newText(font, "nicolas")
+	love.graphics.draw(a, 10, 10)
 end
