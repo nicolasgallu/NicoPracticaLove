@@ -1,140 +1,84 @@
---[[
-Nicolas Gallucci Lua (love) Bible.
+--CALLBACK FUNCTIONS
+--The callback functions are functions that works backwards, in a sense that this ones does not run after you call it,
+--for example as with math.floor() that runs after u call, this by the other hand are called by LOVE at certain times.
+--For example LOAD is a callback that runs just once when the program starts, so is where u would usually set up
+--some init variables.
 
-What is Love?
-Is basically a framework to develop 2D games in Lua.
-Thas why is important to resume some basic Lua material.
---]]
+--LOAD: function that is called once on Love first Run.
+function love.load()
+	love.graphics.setNewFont(12)
+	love.graphics.setColor(0, 0, 0)
+	love.graphics.setBackgroundColor(255, 255, 255)
+end
 
---Functions: Factorial Example
-function factorial(num)
-	if num < 0 or not num then
-		return "ingrese un numero mayor a 0"
+--UPDATE: This function is called continuisly, and is gonna be almost where most of your math is gonna get done.
+--'dt' stands for "delta time" and is the amount of seconds since the last time this function was called
+--(which is usually a small value like 0.025714).
+
+function love.update(dt)
+	if love.keyboard.isDown("up") then
+		num = num + 100 * dt -- this would increment num by 100 per second
 	end
-	if num == 0 then
-		return 1
+end
+
+--DRAW: Is where all drawing lives, and also the love.graphics methods, keep in mind that this function
+--is also called continuisly by LOVE, so if for example u set a font color at the beggining and then change it,
+--because the timing is fast u would never see it black?? to test.
+--well already test it with the timer.sleep and yes is cause of that.
+function love.draw()
+	love.graphics.print("This text is not black because of the line below", 100, 100)
+	--	love.timer.sleep(0.3)
+	love.graphics.setColor(255, 0, 0)
+	love.graphics.print("This text is red", 100, 200)
+end
+
+--MOUSEPRESSED: This functions is called whenever a mouse button is clicked, getting both coordinates,
+--and clicked button.
+--
+function love.mousepressed(x, y, button, istouch)
+	if button == 1 then
+		imgx = x -- move image to where mouse clicked
+		imgy = y
+	end
+end
+
+--MOUSERELEASED: This function is triggered once the click is released, with both coordinates and button.
+
+function love.mousereleased(x, y, button, istouch)
+	if button == 1 then
+		fireSlingshot(x, y) -- this totally awesome custom function is defined elsewhere
+	end
+end
+
+--KEYPRESSED & RELEASED: This functions is the same as mouse, but focused on keyboard.
+function love.keypressed(key)
+	if key == "b" then
+		text = "The B key was pressed."
+	elseif key == "a" then
+		a_down = true
+	end
+end
+function love.keyreleased(key)
+	if key == "b" then
+		text = "The B key was released."
+	elseif key == "a" then
+		a_down = false
+	end
+end
+
+--FOCUS: This functionss triggers once the user leaves the LOVE windows, giving us the chance of pause
+--the game or do some other actions.
+
+function love.focus(f)
+	if not f then
+		print("LOST FOCUS")
 	else
-		return num * factorial(num - 1)
+		print("GAINED FOCUS")
 	end
 end
 
---[[ 
-num = io.read("*n") --> con '*n' nos aseguramos de solo tomar numbers
-print(factorial(num))
-]]
-
---Functions: Twice Example
-function twice(x)
-	return 2 * x
-end
-
---8 QUEENS PUZZLE.
---the eight queen puzzle follows the next problem:
---try to place 8 queens in a chessboard, in a way that not any of the queens can't atack to each other.
-
---im gonna work with Tables
-
-chessboard = {
-	[1] = { 1, 2, 3, 4 },
-	[2] = { 1, 2, 3, 4 },
-	[3] = { 1, 2, 3, 4 },
-	[4] = { 1, 2, 3, 4 },
-}
-
---una vez tenemos definido el tablero, resolver:
---take input: col:fila, ejemplo 1:1.
---output: block entire row and column.
---if you choose row 1,is easy all rest values converts to "x"
---if you choose col 1, is also easy, iterate over each row to conver column value to "x"
---diagonals: think on movement over the matriz +1-1..etc without getting out the chessboard.
---restrictions over diagonals, u can not pass row1,4 and columns 1and 4.
-
-queens_count = 4
-another_round = true
-function queens_game(user_inp)
-	if chessboard[user_inp["row"]][user_inp["col"]] == "x" then
-		print("your queen would be attacked, try another position")
-	else
-		queens_count = queens_count - 1
-		print("Queens pending to organize: " .. queens_count)
-		for row, columns in ipairs(chessboard) do
-			if row == user_inp["row"] then
-				chessboard[row][1] = "x"
-				chessboard[row][2] = "x"
-				chessboard[row][3] = "x"
-				chessboard[row][4] = "x"
-			end
-			columns[user_inp["col"]] = "x"
-
-			move_up = user_inp["row"] + row
-			move_right = user_inp["col"] + row
-			move_left = (user_inp["col"] - row)
-			move_down = (user_inp["row"] - row)
-
-			if move_up > 4 then
-			else
-				if move_right < 5 then
-					chessboard[move_up][move_right] = "x"
-				end
-
-				if move_left > 0 then
-					chessboard[move_up][move_left] = "x"
-				end
-			end
-
-			if move_down < 1 then
-			else
-				if move_right < 5 then
-					chessboard[move_down][move_right] = "x"
-				end
-				if move_left > 0 then
-					chessboard[move_down][move_left] = "x"
-				end
-			end
-		end
-
-		if queens_count == 0 then
-			print("BRO YOU F* WON!!!")
-		elseif queens_count > 0 then
-			another_round = false
-			for i = 1, 4 do
-				if
-					chessboard[i][1] ~= "x"
-					or chessboard[i][2] ~= "x"
-					or chessboard[i][3] ~= "x"
-					or chessboard[i][4] ~= "x"
-				then
-					another_round = true
-				end
-			end
-		end
-
-		if another_round == false then
-			print("bro you suck.. next!")
-		else
-			print("ok bro keep going")
-		end
-
-		print("--------------------------")
-		for i = 0, 3 do
-			print(
-				chessboard[4 - i][1]
-					.. " "
-					.. chessboard[4 - i][2]
-					.. " "
-					.. chessboard[4 - i][3]
-					.. " "
-					.. chessboard[4 - i][4]
-			)
-		end
-	end
-end
-
-while another_round do
-	print("enter a row")
-	row = io.read("*n")
-	print("enter a column")
-	col = io.read("*n")
-	user_inp = { ["row"] = row, ["col"] = col }
-	queens_game(user_inp)
+--QUIT: This functions is triggered once the user clicks the "x" button of the LOVE Window
+--because we get this notification we can do things like saving state of the player, etc..
+function love.quit()
+	print("Thanks for playing! Come back soon!")
 end
