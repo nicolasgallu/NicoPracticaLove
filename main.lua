@@ -113,7 +113,8 @@ Available since LÖVE 0.8.0
 
 function love.load()
 	text = "Enter a valid time: "
-	start = 0
+	t_start = 0
+	t_end = 0
 end
 
 function love.keypressed(key, scancode, isrepeat)
@@ -124,19 +125,19 @@ end
 
 function love.textinput(t)
 	text = text .. t
+	t_start = t
 end
 
 function love.draw()
 	--x, y = love.mouse.getPosition()
 	love.graphics.rectangle("fill", 20, 50, 60, 120)
-
 	love.graphics.print(text, 200, 200)
 	--love.graphics.print(text, 100, 100)
 
-	if start >= 2 then
+	if t_start >= t_end then
 		love.graphics.print("Termino el tiempo")
-	elseif start < 2 then
-		start = love.timer.getTime()
+	elseif t_start < 2 then
+		t_start = love.timer.getTime()
 	end
 
 	love.graphics.print(start, 50, 50)
