@@ -135,12 +135,15 @@ function love.draw()
 	love.graphics.print(timer_start, 100, 100)
 	timer_start = love.timer.getTime()
 
-	crsor = love.mouse.getPosition()
-	love.graphics.print("position: " .. crsor, 30, 30)
+	love.graphics.rectangle("fill", 20, 50, 60, 120)
 
-	if timer_start > timer_end then
-		love.graphics.print("we finish.", 50, 50)
+	crsor_x, crsor_y = love.mouse.getPosition()
+	love.graphics.print("position: " .. crsor_x .. " " .. crsor_y, 30, 30)
+
+	if crsor_x >= 20 and crsor_x <= 80 and crsor_y >= 50 and crsor_y <= 170 then
+		love.graphics.print("estas dentro del cuadro", 300, 300)
 	end
+
 	--[[if timer_start >= timer_end then
 		love.graphics.print("Termino el tiempo")
 	else
