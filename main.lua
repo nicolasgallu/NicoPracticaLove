@@ -111,10 +111,11 @@ Available since LÖVE 0.8.0
 10.number ky (0): Shearing factor (y-axis).
 --]]
 
+--reminder: this is a callback that runs once, so is perfect to instance variables.
 function love.load()
 	text = "Enter a valid time: "
-	t_start = 0
-	t_end = 0
+	timer_start = 0
+	timer_end = 0
 end
 
 function love.keypressed(key, scancode, isrepeat)
@@ -125,26 +126,25 @@ end
 
 function love.textinput(t)
 	text = text .. t
-	t_start = t
+	timer_end = tonumber(t)
 end
 
 function love.draw()
-	--x, y = love.mouse.getPosition()
-	love.graphics.rectangle("fill", 20, 50, 60, 120)
 	love.graphics.print(text, 200, 200)
-	--love.graphics.print(text, 100, 100)
 
-	if t_start >= t_end then
-		love.graphics.print("Termino el tiempo")
-	elseif t_start < 2 then
-		t_start = love.timer.getTime()
+	love.graphics.print(timer_start, 100, 100)
+	timer_start = love.timer.getTime()
+
+	crsor = love.mouse.getPosition()
+	love.graphics.print("position: " .. crsor, 30, 30)
+
+	if timer_start > timer_end then
+		love.graphics.print("we finish.", 50, 50)
 	end
-
-	love.graphics.print(start, 50, 50)
-
-	--if math.floor(start) == 3 then end
-	--love.graphics.print({ { 1, 0, 0 }, "nicolas llegaste a los 30Seconds" }, 100, 100)
-	font = love.graphics.getFont()
-	a = love.graphics.newText(font, "nicolas")
-	love.graphics.draw(a, 10, 10)
+	--[[if timer_start >= timer_end then
+		love.graphics.print("Termino el tiempo")
+	else
+		timer_start = love.timer.getTime()
+	end
+	--]]
 end
